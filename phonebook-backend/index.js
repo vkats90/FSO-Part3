@@ -32,7 +32,7 @@ app.get("/api/persons", (req, res) => {
 
 app.get("/api/persons/:id", (req, res) => {
   const note = phonebook.find((n) => n.id == req.params.id);
-  res.json(note);
+  note ? res.json(note) : res.status(404).end();
 });
 
 app.get("/info", (req, res) => {
@@ -42,6 +42,8 @@ app.get("/info", (req, res) => {
     <p>${date}</p>`
   );
 });
+
+app.delete("/api/persons/:id", (req, res) => {});
 
 const PORT = 3001;
 app.listen(PORT);
