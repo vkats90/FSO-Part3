@@ -48,6 +48,17 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204).end();
 });
 
+app.post("/api/persons", (req, res) => {
+  if (!req.body.name || !req.body.number)
+    return res
+      .status(400)
+      .json({ error: "both a name and a phonebook must be submitted" });
+  let id = Math.floor(Math.random() * 5000);
+  let note = { id, ...req.body };
+  phonebook = phonebook.concat(note);
+  res.json(note);
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Server is running on port ${PORT}`);
