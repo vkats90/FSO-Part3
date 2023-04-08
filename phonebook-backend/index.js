@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-const phonebook = [
+let phonebook = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -43,7 +43,10 @@ app.get("/info", (req, res) => {
   );
 });
 
-app.delete("/api/persons/:id", (req, res) => {});
+app.delete("/api/persons/:id", (req, res) => {
+  phonebook = phonebook.filter((x) => x.id != req.params.id);
+  res.status(204).end();
+});
 
 const PORT = 3001;
 app.listen(PORT);
