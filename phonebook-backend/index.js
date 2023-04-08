@@ -53,6 +53,10 @@ app.post("/api/persons", (req, res) => {
     return res
       .status(400)
       .json({ error: "both a name and a phonebook must be submitted" });
+  if (phonebook.find((n) => n.name === req.body.name))
+    return res
+      .status(400)
+      .json({ error: "this name already exists in the phonebook" });
   let id = Math.floor(Math.random() * 5000);
   let note = { id, ...req.body };
   phonebook = phonebook.concat(note);
