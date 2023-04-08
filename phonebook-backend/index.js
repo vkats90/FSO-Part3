@@ -30,6 +30,11 @@ app.get("/api/persons", (req, res) => {
   res.json(phonebook);
 });
 
+app.get("/api/persons/:id", (req, res) => {
+  const note = phonebook.find((n) => n.id == req.params.id);
+  res.json(note);
+});
+
 app.get("/info", (req, res) => {
   let date = new Date();
   res.send(
