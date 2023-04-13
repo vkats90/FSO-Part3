@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
+const Phonenumber = require("./modules/phonenumber");
 
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
@@ -14,44 +16,30 @@ app.use(
 app.use(cors());
 app.use(express.static("build"));
 
-let phonebook = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+let phonebook = [];
 
 app.get("/api/persons", (req, res) => {
-  res.json(phonebook);
+  Phonenumber.find({}).then((numbers) => {
+    res.json(numbers);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const note = phonebook.find((n) => n.id == req.params.id);
-  note ? res.json(note) : res.status(404).end();
+  Phonenumber.findById(req.params.id)
+    .then((note) => {
+      res.json(note);
+    })
+    .catch((err) => res.status(404).end());
 });
 
 app.get("/info", (req, res) => {
   let date = new Date();
-  res.send(
-    `<p>Phonebook has info for ${phonebook.length} people</p>
-    <p>${date}</p>`
-  );
+  Phonenumber.find({}).then((phonebook) => {
+    res.send(
+      `<p>Phonebook has info for ${phonebook.length} people</p>
+      <p>${date}</p>`
+    );
+  });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
