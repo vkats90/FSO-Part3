@@ -26,8 +26,8 @@ app.get("/api/persons", (req, res) => {
 
 app.get("/api/persons/:id", (req, res) => {
   Phonenumber.findById(req.params.id)
-    .then((note) => {
-      res.json(note);
+    .then((num) => {
+      res.json(num);
     })
     .catch((err) => res.status(404).end());
 });
@@ -42,8 +42,8 @@ app.get("/info", (req, res) => {
   });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  phonebook = phonebook.filter((x) => x.id != req.params.id);
+app.delete("/api/persons/:id", async (req, res, next) => {
+  const num = await Phonenumber.findByIdAndRemove(req.params.id);
   res.status(204).end();
 });
 
@@ -52,14 +52,15 @@ app.post("/api/persons", (req, res) => {
     return res
       .status(400)
       .json({ error: "both a name and a phonebook must be submitted" });
-  if (phonebook.find((n) => n.name === req.body.name))
-    return res
-      .status(400)
-      .json({ error: "this name already exists in the phonebook" });
-  let id = Math.floor(Math.random() * 5000);
-  let note = { id, ...req.body };
-  phonebook = phonebook.concat(note);
-  res.json(note);
+
+  let person = new Phonenumber({ ...req.body });
+
+  person
+    .save()
+    .then((num) => {
+      res.json(num);
+    })
+    .catch((err) => res.status(404).end);
 });
 
 const PORT = process.env.PORT || 3001;
