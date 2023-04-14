@@ -1,3 +1,5 @@
+// this phonebook app uses both then/catch and async/await becuse its a learning experience
+
 require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
@@ -43,8 +45,12 @@ app.get("/info", (req, res) => {
 });
 
 app.delete("/api/persons/:id", async (req, res, next) => {
-  const num = await Phonenumber.findByIdAndRemove(req.params.id);
-  res.status(204).end();
+  try {
+    const num = await Phonenumber.findByIdAndRemove(req.params.id);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.post("/api/persons", (req, res) => {
@@ -62,6 +68,22 @@ app.post("/api/persons", (req, res) => {
     })
     .catch((err) => res.status(404).end);
 });
+
+const errorHandler = (err, req, res, next) => {
+  console.log(err.message);
+
+  if (err.name == "CastError")
+    res.status(400).json({ error: "malformatted id" });
+
+  next(err);
+};
+
+const unknowEndpoint = (req, res) => {
+  res.status(404).json({ error: "Unknown endpoint" });
+};
+
+app.use(unknowEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT);
