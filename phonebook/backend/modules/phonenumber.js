@@ -12,7 +12,7 @@ mongoose
   .catch("failed to connect to database");
 
 const numberSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, minLength: 3, required: true },
   number: String,
 });
 

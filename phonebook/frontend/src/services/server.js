@@ -24,7 +24,6 @@ const replaceNumber = (id, name, number) => {
   return axios
     .put(baseURL + id, { name, number })
     .then((response) => response.data);
-  //.catch((error) => {addNumber(name, number)});
 };
 
 let serverServices = { getAll, addNumber, deleteNumber, replaceNumber };

@@ -60,12 +60,22 @@ const App = () => {
       }
     } else {
       setPersons(persons.concat({ name: newName, number: newNumber }));
-      serverServices.addNumber(newName, newNumber);
-      setColor("darkgreen");
-      setMessage(`${newName} was added!`);
-      setTimeout(() => setMessage(null), 5000);
-      setNewName("");
-      setNewNumber("");
+      serverServices
+        .addNumber(newName, newNumber)
+        .then((res) => {
+          console.log("from app.js-then", res);
+          setColor("darkgreen");
+          setMessage(`${newName} was added!`);
+          setTimeout(() => setMessage(null), 5000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((err) => {
+          setColor("red");
+          setMessage(err.response.data.err);
+          setPersons(persons.filter((person) => person !== newName));
+          setTimeout(() => setMessage(null), 5000);
+        });
     }
   };
 
