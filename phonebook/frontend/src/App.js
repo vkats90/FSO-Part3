@@ -11,13 +11,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [message, setMessage] = useState(null);
-  const [color, setColor] = useState("darkgreen");
+  const [color, setColor] = useState("");
 
   useEffect(() => {
     serverServices.getAll().then((initialNumbers) => {
       setPersons(initialNumbers);
     });
-  }, []);
+  }, [color]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -29,6 +29,24 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
+  };
+
+  const handleDelete = (person) => {
+    if (window.confirm("Are you sure you want to delete this number?"))
+      serverServices
+        .deleteNumber(person)
+        .then((res) => {
+          setColor("darkgreen");
+          setMessage(`${person.name}'s number has been deleted`);
+          setPersons(persons.filter((person) => person !== newName));
+          setTimeout(() => setMessage(null), 5000);
+        })
+        .catch((error) => {
+          setColor("red");
+          setMessage(`${person.name}'s number has already been deleted`);
+          setPersons(persons.filter((person) => person !== newName));
+          setTimeout(() => setMessage(null), 5000);
+        });
   };
 
   const handleSubmit = (event) => {
@@ -97,7 +115,7 @@ const App = () => {
         handleSubmit={handleSubmit}
       />
       <h2>Numbers</h2>
-      <Numbers persons={persons} filter={filter} />
+      <Numbers persons={persons} filter={filter} handleClick={handleDelete} />
     </div>
   );
 };

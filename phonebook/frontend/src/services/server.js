@@ -12,12 +12,7 @@ const addNumber = (name, number) => {
 };
 
 const deleteNumber = (person) => {
-  return axios
-    .delete(baseURL + person.id)
-    .then((response) => response.data)
-    .catch((error) => {
-      alert(`${person.name}'s number has already been deleted`);
-    });
+  return axios.delete(baseURL + person.id).then((response) => response.data);
 };
 
 const replaceNumber = (id, name, number) => {

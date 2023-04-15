@@ -1,10 +1,6 @@
 import serverServices from "../services/server";
 
-const Numbers = ({ persons, filter }) => {
-  const handleClick = (person) => () => {
-    if (window.confirm("Are you sure you want to delete this number?"))
-      serverServices.deleteNumber(person);
-  };
+const Numbers = ({ persons, filter, handleClick }) => {
   return (
     <div>
       {persons
@@ -12,7 +8,7 @@ const Numbers = ({ persons, filter }) => {
         .map((person) => (
           <div key={person.id}>
             {person.name} {person.number}{" "}
-            <button onClick={handleClick(person)}>delete</button>
+            <button onClick={() => handleClick(person)}>delete</button>
           </div>
         ))}{" "}
     </div>
