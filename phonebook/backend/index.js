@@ -47,7 +47,10 @@ app.get("/info", (req, res) => {
 app.delete("/api/persons/:id", async (req, res, next) => {
   try {
     const num = await Phonenumber.findByIdAndRemove(req.params.id);
-    res.status(204).end();
+    console.log(num);
+    num
+      ? res.status(204).end()
+      : res.status(400).json({ error: "Number was already deleted" });
   } catch (err) {
     next(err);
   }
