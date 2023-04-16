@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-url = process.env.MONGODB_URL;
+const url = process.env.MONGODB_URL;
 
 mongoose.set("strictQuery", false);
 
@@ -8,7 +8,7 @@ console.log("Connecting to database");
 
 mongoose
   .connect(url)
-  .then((res) => console.log("connected to database"))
+  .then((_res) => console.log("connected to database"))
   .catch("failed to connect to database");
 
 const numberSchema = new mongoose.Schema({
@@ -27,7 +27,7 @@ const numberSchema = new mongoose.Schema({
 });
 
 numberSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
+  transform: (_document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;

@@ -7,7 +7,7 @@ const app = express();
 const cors = require("cors");
 const Phonenumber = require("./modules/phonenumber");
 
-morgan.token("body", function (req, res) {
+morgan.token("body", function (req, _res) {
   return JSON.stringify(req.body);
 });
 
@@ -18,9 +18,7 @@ app.use(
 app.use(cors());
 app.use(express.static("build"));
 
-let phonebook = [];
-
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", (_req, res) => {
   Phonenumber.find({}).then((numbers) => {
     res.json(numbers);
   });
@@ -31,10 +29,10 @@ app.get("/api/persons/:id", (req, res) => {
     .then((num) => {
       res.json(num);
     })
-    .catch((err) => res.status(404).end());
+    .catch((_err) => res.status(404).end());
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", (_req, res) => {
   let date = new Date();
   Phonenumber.find({}).then((phonebook) => {
     res.send(
@@ -87,7 +85,7 @@ app.put("/api/persons/:id", async (req, res, next) => {
   }
 });
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, _req, res, next) => {
   console.log(err.message);
 
   if (err.name == "CastError")
@@ -98,7 +96,7 @@ const errorHandler = (err, req, res, next) => {
   next(err);
 };
 
-const unknowEndpoint = (req, res) => {
+const unknowEndpoint = (_req, res) => {
   res.status(404).json({ error: "Unknown endpoint" });
 };
 

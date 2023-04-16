@@ -25,7 +25,7 @@ const phonenumber = new Phonenumber({
 });
 
 if (phonenumber.name) {
-  phonenumber.save().then((result) => {
+  phonenumber.save().then(() => {
     console.log(
       `added ${phonenumber.name} number ${phonenumber.number} to the phonebook `
     );
